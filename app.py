@@ -21,7 +21,7 @@ cfg_enable_url_download = False
 
 
 def pretrained_yolov5(device, src):
-    if src == 'Загрузить изображение':
+    if src == 'Своё любое изображение':
         image_file = st.file_uploader("Загрузить изображение:", type=['png', 'jpeg', 'jpg'])
         col1, col2 = st.columns(2)
         if image_file is not None:
@@ -50,7 +50,7 @@ def pretrained_yolov5(device, src):
             with col2:
                 st.image(img_, caption='Результат', use_column_width='always')
 
-    elif src == 'Изображения из тестовой выборки':
+    elif src == 'Изображение из тестовой выборки':
         # Image selector slider
         imgpath = glob.glob('data/images/*')
         imgsel = st.slider('Выбрать случайную картинку', min_value=1, max_value=len(imgpath), step=1)
