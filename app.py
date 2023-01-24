@@ -53,7 +53,7 @@ def custom_yolov5s(device="CPU"):
     st.header('Обученная YOLOv5s на кастомном датасете')
     st.subheader("Датасет: виды перерабатываемого и неперерабатываемого мусора")
     st.text("В перспективе такую модель можно использовать на мусороперерабатывающий заводе для быстрой сортировки или для дронов, собирающих мусор в природных зонах вроде лесов и океанов.")
-    st.image("metrcis_screenshot.png", caption="Лосс и метрики обученной модели")
+    st.image("data/metrcis_screenshot.png", caption="Лосс и метрики обученной модели")
     imgpath = glob.glob('data/images/*')
     imgsel = st.slider('Выбрать случайную картинку из тестовой выборки', min_value=1, max_value=len(imgpath), step=1)
     image_file = imgpath[imgsel - 1]
