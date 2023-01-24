@@ -31,8 +31,8 @@ def pretrained_yolov5(device="CPU"):
             ts = datetime.timestamp(datetime.now())
             imgpath = os.path.join('data/uploads', str(ts) + image_file.name)
             outputpath = os.path.join('data/outputs', os.path.basename(imgpath))
-            #with open(imgpath, mode="wb") as f:
-                #f.write(image_file.getbuffer())
+            with open(imgpath, mode="wb") as f:
+                f.write(image_file.getbuffer())
 
             # call Model prediction--
             model = torch.hub.load("ultralytics/yolov5", "yolov5m", pretrained=True)
