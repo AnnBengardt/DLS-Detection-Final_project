@@ -21,6 +21,7 @@ cfg_enable_url_download = False
 
 
 def pretrained_yolov5(device="CPU"):
+        st.subheader('YOLOv5m из "коробки" с помощью torch.hub')
         image_file = st.file_uploader("Загрузить изображение:", type=['png', 'jpeg', 'jpg'])
         col1, col2 = st.columns(2)
         if image_file is not None:
@@ -30,8 +31,8 @@ def pretrained_yolov5(device="CPU"):
             ts = datetime.timestamp(datetime.now())
             imgpath = os.path.join('data/uploads', str(ts) + image_file.name)
             outputpath = os.path.join('data/outputs', os.path.basename(imgpath))
-            with open(imgpath, mode="wb") as f:
-                f.write(image_file.getbuffer())
+            #with open(imgpath, mode="wb") as f:
+                #f.write(image_file.getbuffer())
 
             # call Model prediction--
             model = torch.hub.load("ultralytics/yolov5", "yolov5m", pretrained=True)
