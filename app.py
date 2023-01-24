@@ -21,8 +21,13 @@ cfg_enable_url_download = False
 
 
 def pretrained_yolov5(device, src):
-    if src == 'Своё любое изображение':
         image_file = st.file_uploader("Загрузить изображение:", type=['png', 'jpeg', 'jpg'])
+
+        imgpath = glob.glob('data/images/*')
+        imgsel = st.slider('Выбрать случайную картинку', min_value=1, max_value=len(imgpath), step=1)
+        selected_image_file = imgpath[imgsel - 1]
+        submit = st.button("Начать детекцию")
+
         col1, col2 = st.columns(2)
         if image_file is not None:
             img = Image.open(image_file)
@@ -50,45 +55,36 @@ def pretrained_yolov5(device, src):
             with col2:
                 st.image(img_, caption='Результат', use_column_width='always')
 
-    elif src == 'Изображение из тестовой выборки':
-        # Image selector slider
-        imgpath = glob.glob('data/images/*')
-        imgsel = st.slider('Выбрать случайную картинку', min_value=1, max_value=len(imgpath), step=1)
-        image_file = imgpath[imgsel - 1]
-        submit = st.button("Начать детекцию")
-        col1, col2 = st.columns(2)
-        with col1:
-            img = Image.open(image_file)
-            st.image(img, caption='Выбранное изображение', use_column_width='always')
-        with col2:
-            if image_file is not None and submit:
-                # call Model prediction--
-                model = torch.hub.load("ultralytics/yolov5", "yolov5m", pretrained=True)
-                pred = model(image_file)
-                pred.render()  # render bbox in image
-                for im in pred.ims:
-                    im_base64 = Image.fromarray(im)
-                    im_base64.save(os.path.join('data/outputs', os.path.basename(image_file)))
-                    # --Display predicton
-                    img_ = Image.open(os.path.join('data/outputs', os.path.basename(image_file)))
-                    st.image(img_, caption='Результат')
+
+        elif selected_image_file is not None:
+            image_file = selected_image_file
+            with col1:
+                img = Image.open(image_file)
+                st.image(img, caption='Выбранное изображение', use_column_width='always')
+            with col2:
+                if image_file is not None and submit:
+                    # call Model prediction--
+                    model = torch.hub.load("ultralytics/yolov5", "yolov5m", pretrained=True)
+                    pred = model(image_file)
+                    pred.render()  # render bbox in image
+                    for im in pred.ims:
+                        im_base64 = Image.fromarray(im)
+                        im_base64.save(os.path.join('data/outputs', os.path.basename(image_file)))
+                        # --Display predicton
+                        img_ = Image.open(os.path.join('data/outputs', os.path.basename(image_file)))
+                        st.image(img_, caption='Результат')
 
 def main():
 
-    datasrc = st.sidebar.radio("Загрузить", ['Изображение из тестовой выборки', 'Своё любое изображение'])
+    option = st.sidebar.radio("Модели", ['Pretrained YOLOv5m', 'Обученная на кастомном датасете YOLOv5s (изображения)',
+                                         'Обученная на кастомном датасете YOLOv5s (видео)'])
 
-    option = st.sidebar.radio("Модель", ['Pretrained YOLOv5m', 'Обученная на кастомном датасете ...'])
-    if torch.cuda.is_available():
-        deviceoption = st.sidebar.radio("Устройство", ['CPU', 'Cuda'], disabled=False, index=1)
-    else:
-        deviceoption = st.sidebar.radio("Устройство", ['CPU', 'Cuda'], disabled=True, index=0)
-    # -- End of Sidebar
 
     st.header('Проект для DLS (семестр Осень, 2022): Detection')
     st.subheader("Автор: Марунько Анна")
-    st.sidebar.markdown("Здесь будет ссылка на гитхаб")
+    st.sidebar.markdown("https://github.com/AnnBengardt/DLS-Detection-Final_project")
     if option == "Pretrained YOLOv5m":
-        pretrained_yolov5(deviceoption, datasrc)
+        pretrained_yolov5("0")
     elif option == "Обученная на кастомном датасете ...":
         pass
 
