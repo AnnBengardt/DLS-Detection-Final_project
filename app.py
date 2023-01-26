@@ -83,7 +83,7 @@ def video_custom_yolov5s():
         video_bytes = st_video.read()
         st.video(video_bytes)
         st.write("Загруженное видео")
-        run(weights='data/models/yoloTrained.pt', source=imgpath, device="cpu", project='data/outputs')
+        run(weights='data/models/yoloTrained.pt', source=imgpath, device="cpu", project='data', name="outputs", exist_ok=True)
         st_video2 = open(outputpath, 'rb')
         video_bytes2 = st_video2.read()
         st.video(video_bytes2)
