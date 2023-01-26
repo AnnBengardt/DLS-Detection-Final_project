@@ -84,10 +84,10 @@ def video_custom_yolov5s():
         st.video(video_bytes)
         st.write("Загруженное видео")
         run(weights='data/models/yoloTrained.pt', source=imgpath, device="cpu", project='data', name="outputs", exist_ok=True)
-        st_video2 = open(outputpath, 'rb')
-        video_bytes2 = st_video2.read()
-        st.video(video_bytes2)
-        st.write("Результат")
+        with open(outputpath) as f:
+                st.download_button('Скачать видео', f) 
+        st.write("К сожалению, HTML5 video player не поддерживает кодировку OpenCV VideoWriter :(")
+        st.write("Результат детекции можно просмотреть, скачав файл выше")
 
 
 def main():
