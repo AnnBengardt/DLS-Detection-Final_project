@@ -5,19 +5,6 @@ from io import *
 import glob
 from datetime import datetime
 import os
-import wget
-import time
-
-## CFG
-#cfg_model_path = "models/yourModel.pt"
-
-cfg_enable_url_download = False
-#if cfg_enable_url_download:
-    #url = "https://archive.org/download/yoloTrained/yoloTrained.pt"  # Configure this if you set cfg_enable_url_download to True
-    #cfg_model_path = f"models/{url.split('/')[-1:][0]}"  # config model path from url name
-
-
-## END OF CFG
 
 
 def pretrained_yolov5(device="CPU"):
@@ -78,9 +65,33 @@ def custom_yolov5s(device="CPU"):
 
 
 
+def video_custom_yolov5s():
+    st.header('Обученная YOLOv5s на кастомном датасете')
+    st.subheader("Датасет: виды перерабатываемого и неперерабатываемого мусора")
+    st.subheader("Тест на видео: желательно загружать видео с мусором")
+    uploaded_video = st.file_uploader("Загрузить видео", type=['mp4', 'mpeg', 'mov'])
+    if uploaded_video != None:
+        ts = datetime.timestamp(datetime.now())
+        imgpath = os.path.join('data/uploads', str(ts) + uploaded_video.name)
+        outputpath = os.path.join('data/outputs', os.path.basename(imgpath))
+
+        with open(imgpath, mode='wb') as f:
+            f.write(uploaded_video.read())  # save video to disk
+
+        st_video = open(imgpath, 'rb')
+        video_bytes = st_video.read()
+        st.video(video_bytes)
+        st.write("Загруженное видео")
+        run(weights='data/models/yoloTrained.pt', source=imgpath, device="cpu")
+        st_video2 = open(outputpath, 'rb')
+        video_bytes2 = st_video2.read()
+        st.video(video_bytes2)
+        st.write("Результат")
+
+
 def main():
 
-    option = st.sidebar.radio("Модель", ['Pretrained YOLOv5m', 'Pretrained YOLOv5m - video','Custom dataset YOLOv5s'])
+    option = st.sidebar.radio("Модель", ['Pretrained YOLOv5m','Custom dataset YOLOv5s', 'Custom dataset YOLOv5s - video'])
 
     st.header('Проект для DLS (семестр Осень, 2022): Detection')
     st.subheader("Автор: Марунько Анна")
@@ -89,22 +100,9 @@ def main():
         pretrained_yolov5()
     elif option == "Custom dataset YOLOv5s":
         custom_yolov5s()
-    elif option == "Pretrained YOLOv5m - video":
-        pass
+    elif option == "Custom dataset YOLOv5s - video":
+        video_custom_yolov5s()
 
 
 if __name__ == '__main__':
     main()
-
-
-# Downlaod Model from url.
-@st.cache
-def loadModel(url):
-    start_dl = time.time()
-    model_file = wget.download(url, out="models/")
-    finished_dl = time.time()
-    print(f"Model Downloaded, ETA:{finished_dl - start_dl}")
-
-
-if cfg_enable_url_download:
-    loadModel()
