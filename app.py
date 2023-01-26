@@ -4,6 +4,7 @@ from PIL import Image
 from io import *
 import glob
 from datetime import datetime
+from detect import run
 import os
 
 
