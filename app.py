@@ -6,6 +6,7 @@ import glob
 from datetime import datetime
 from detect import run
 import os
+import ffmpeg
 
 
 def pretrained_yolov5(device="CPU"):
@@ -84,6 +85,7 @@ def video_custom_yolov5s():
         st.video(video_bytes)
         st.write("Загруженное видео")
         run(weights='data/models/yoloTrained.pt', source=imgpath, device="cpu", project='data', name="outputs", exist_ok=True)
+        os.system("ffmpeg -i " + outputpath + " -vcodec libx264 -f mp4 " + outputpath)
         st_video2 = open(outputpath, 'rb')
         video_bytes2 = st_video2.read()
         st.video(video_bytes2)
