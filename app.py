@@ -86,7 +86,7 @@ def video_custom_yolov5s():
         st.write("Загруженное видео")
         run(weights='data/models/yoloTrained.pt', source=imgpath, device="cpu", project='data', name="outputs", exist_ok=True)
         #os.chdir("data/outputs")
-        os.system("ffmpeg -i " + imgpath + " -vcodec libx264 -f mp4 " + outputpath)
+        os.system("ffmpeg -i " + outputpath + " -vcodec libx264 -f mp4 " + outputpath)
         print(os.listdir("data/outputs/"))
         st_video2 = open(outputpath, 'rb')
         video_bytes2 = st_video2.read()
