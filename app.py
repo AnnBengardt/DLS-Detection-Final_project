@@ -72,7 +72,7 @@ def video_custom_yolov5s():
     st.header('Обученная YOLOv5s на кастомном датасете')
     st.subheader("Датасет: виды перерабатываемого и неперерабатываемого мусора")
     st.subheader("Тест на видео: желательно загружать видео с мусором")
-    uploaded_video = st.file_uploader("Загрузить видео", type=['mp4', 'mpeg', 'mov'])
+    #uploaded_video = st.file_uploader("Загрузить видео", type=['mp4', 'mpeg', 'mov'])
     if uploaded_video != None:
         ts = datetime.timestamp(datetime.now())
         imgpath = os.path.join('data/uploads', str(ts) + uploaded_video.name)
